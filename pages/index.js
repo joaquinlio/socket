@@ -1,67 +1,59 @@
-import React from 'react'
-import Link from 'next/link'
-import io from 'socket.io-client'
+import React from "react";
+import Link from "next/link";
+import io from "socket.io-client";
 
-class Index extends React.Component{
-
-  constructor(){
+class Index extends React.Component {
+  constructor() {
     super();
     this.state = {
-      messages: [{
-        body: 'clase 1'
-      },{
-        body: 'clase 2'
-      }]
-    }
+      messages: []
+    };
   }
 
-  componentDidMount(){
-    this.socket = io('/');
+  componentDidMount() {
+    this.socket = io("/");
     //esto de aca abajo essta escuchando
-    this.socket.on('message', message => {
+    /* this.socket.on("message", message => {
       this.setState({
         messages: [message, ...this.state.messages]
-      })
-    })
+      });
+    }); */
   }
 
   handleSubmit = event => {
-    const body = event.target.value
+    const body = event.target.value;
     if (event.keyCode === 13 && body) {
       const message = {
         body,
-        // from: 'Me'
-      }
-      let todo = { messages: [message, ...this.state.messages]};
-      this.setState({ messages: [message, ...this.state.messages]});
-      console.log(todo);
-      this.socket.emit('message', todo);
-      event.target.value = '';
+        from: "Me"
+      };
+      this.setState({ messages: [message, ...this.state.messages] });
+      this.socket.emit("message", body);
+      event.target.value = "";
     }
-  }
+  };
 
-  render(){
-    
+  render() {
     const messages = this.state.messages.map((message, index) => {
-      return <li key={index}>
-        <b>{message.body}</b>
-      </li>
+      return (
+        <li key={index}>
+          <b>{message.body}</b>
+        </li>
+      );
     });
-    return(
+    return (
       <div>
+        <h1>hola22</h1>
 
-      <h1>hola22</h1>
-
-      <input 
-      type="text"
-      placeholder="Escribir..."
-      onKeyUp={this.handleSubmit.bind(this)}
-      />
-      <p>hola</p>
-      {messages}
+        <input
+          type="text"
+          placeholder="Escribir..."
+          onKeyUp={this.handleSubmit.bind(this)}
+        />
+        {messages}
       </div>
-    )
+    );
   }
 }
 
-export default Index
+export default Index;
