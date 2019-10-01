@@ -11,7 +11,7 @@ class Index extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = io("/", {
+    this.socket = io("https://localhost:3001", {
       transports: ["websocket"]
     });
     //esto de aca abajo essta escuchando

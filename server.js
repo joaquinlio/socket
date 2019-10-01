@@ -2,11 +2,12 @@ const express = require("express");
 const next = require("next");
 // var mysql = require("mysql");
 require("isomorphic-fetch");
-const http = require("http");
+const https = require("https");
 var fs = require("fs");
 var options = {
   key: fs.readFileSync("certificates/campus.key"),
-  cert: fs.readFileSync("certificates/campus.crt")
+  cert: fs.readFileSync("certificates/campus.crt"),
+  ca: fs.readFileSync("certificates/campus-ca.crt")
 };
 const socketIo = require("socket.io");
 const port = parseInt(process.env.PORT, 10) || 3001;
@@ -14,11 +15,17 @@ const port = parseInt(process.env.PORT, 10) || 3001;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 app.prepare().then(() => {
   const server = express();
   server.use(express.json());
-  server.on(
+
+  const server2 = https.createServer(options, server);
+  const io = socketIo(server2, {
+    pingTimeout: 3600000 // intervalo de una hora haga que la conexion del socket se cierre
+  });
+  server2.on(
     "certificate-error",
     (event, webContents, url, error, certificate, callback) => {
       // On certificate error we disable default behaviour (stop loading the page)
@@ -27,11 +34,6 @@ app.prepare().then(() => {
       callback(true);
     }
   );
-  const server2 = http.createServer(server);
-  const io = socketIo(server2, {
-    pingTimeout: 3600000 // intervalo de una hora haga que la conexion del socket se cierre
-  });
-
   io.use(function(socket, next) {
     console.log("socket conectado ID:" + socket.id);
     next();
@@ -74,7 +76,8 @@ app.prepare().then(() => {
     //let sess = "xd";
     return app.render(req, res, req.originalUrl);
   });
-  server2.listen(port, err => {
+  var serverPort = 3001;
+  server2.listen(serverPort, err => {
     if (err) throw err;
     /* const host = server2.address().address;
     const port = server2.address().port; */
