@@ -11,7 +11,9 @@ class Index extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = io("/");
+    this.socket = io("/", {
+      transports: ["websocket"]
+    });
     //esto de aca abajo essta escuchando
     /* this.socket.on("message", message => {
       this.setState({

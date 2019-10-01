@@ -2,7 +2,7 @@ const express = require("express");
 const next = require("next");
 // var mysql = require("mysql");
 require("isomorphic-fetch");
-const https = require("https");
+const http = require("http");
 var fs = require("fs");
 var options = {
   key: fs.readFileSync("certificates/campus.key"),
@@ -14,17 +14,27 @@ const port = parseInt(process.env.PORT, 10) || 3001;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
-// const { json, send, createError, run } = require("micro");
 
 app.prepare().then(() => {
   const server = express();
   server.use(express.json());
-  const server2 = https.createServer(options, server);
+  server.on(
+    "certificate-error",
+    (event, webContents, url, error, certificate, callback) => {
+      // On certificate error we disable default behaviour (stop loading the page)
+      // and we then say "it is all fine - true" to the callback
+      event.preventDefault();
+      callback(true);
+    }
+  );
+  const server2 = http.createServer(server);
   const io = socketIo(server2, {
     pingTimeout: 3600000 // intervalo de una hora haga que la conexion del socket se cierre
   });
 
   io.use(function(socket, next) {
+    console.log("socket conectado ID:" + socket.id);
+    next();
     /* let token = socket.handshake.query.token;
     fetch("https://api.axontraining.com/sesion", {
       headers: {
@@ -66,8 +76,8 @@ app.prepare().then(() => {
   });
   server2.listen(port, err => {
     if (err) throw err;
-    const host = server2.address().address;
-    const port = server2.address().port;
+    /* const host = server2.address().address;
+    const port = server2.address().port; */
     console.log(`>Esto no es api PAPI Ready on https://localhost:${port}`);
   });
 });
