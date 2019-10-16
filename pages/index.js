@@ -11,15 +11,14 @@ class Index extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = io("https://localhost:3001", {
+    this.socket = io("http://apio.axontraining.com.ar:8890", {
       transports: ["websocket"]
     });
-    //esto de aca abajo essta escuchando
-    /* this.socket.on("message", message => {
-      this.setState({
-        messages: [message, ...this.state.messages]
-      });
-    }); */
+    this.socket.emit("clase", { clase: "probandosocketes" });
+
+    this.socket.on("clase", clase => {
+      console.log(clase);
+    });
   }
 
   handleSubmit = event => {
