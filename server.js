@@ -1,6 +1,5 @@
 const express = require("express");
 const next = require("next");
-// var mysql = require("mysql");
 require("isomorphic-fetch");
 const http = require("http");
 var fs = require("fs");
@@ -9,7 +8,7 @@ var fs = require("fs");
   cert: fs.readFileSync("./file.crt")
 }; */
 const socketIo = require("socket.io");
-const port = parseInt(process.env.PORT, 10) || 8890;
+const port = parseInt(process.env.PORT, 10) || 3001;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
@@ -21,7 +20,8 @@ app.prepare().then(() => {
 
   const server2 = http.createServer(server);
   const io = socketIo(server2, {
-    pingTimeout: 3600000 // intervalo de una hora haga que la conexion del socket se cierre
+    pingTimeout: 3600000, // intervalo de una hora haga que la conexion del socket se cierre
+    pingInterval: 3600000
   });
 
   io.use(function(socket, next) {
@@ -68,10 +68,10 @@ app.prepare().then(() => {
       puerto: port
     });
   });
-  server2.listen(port, err => {
+  server.listen(port, err => {
     if (err) throw err;
-    const host = server2.address().address;
-    const port2 = server2.address().port;
-    console.log(`>Esto no es api PAPI Ready on https://${host}:${port2}`);
+    /* const host = server2.address().address;
+    const port2 = server2.address().port; */
+    console.log(`>Esto no es api PAPI Ready on https://localhost:${port}`);
   });
 });

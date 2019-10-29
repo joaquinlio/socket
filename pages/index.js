@@ -11,10 +11,10 @@ class Index extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = io("http://apio.axontraining.com.ar:8890", {
-      transports: ["websocket"]
+    this.socket = io("/", {
+      transports: ["websocket"],
+      secure: false
     });
-    this.socket.emit("clase", { clase: "probandosocketes" });
 
     this.socket.on("clase", clase => {
       console.log(clase);
@@ -28,8 +28,8 @@ class Index extends React.Component {
         body,
         from: "Me"
       };
-      this.setState({ messages: [message, ...this.state.messages] });
-      this.socket.emit("message", body);
+      //this.setState({ messages: [message, ...this.state.messages] });
+      this.socket.emit("clase", { clase: "probandosocketes" });
       event.target.value = "";
     }
   };
