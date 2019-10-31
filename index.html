@@ -1,8 +1,31 @@
-<script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io-client/socket.io-client.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"
+></script>
+
 <script>
+  console.log(io);
   var socket = io.connect("/", {
-    transports: ["websocket"],
-    secure: false
+    transports: ["websocket"]
+    //rejectUnauthorized: false
+  });
+  function enviarSockete() {
+    var clase = { probando: "socketes" };
+
+    socket.emit("clase", clase);
+  }
+  $(document).ready(function() {
+    //console.log(socket);
+    socket.on("connect", () => {
+      //console.log("conectado");
+      socket.on("clase", clase => {
+        console.log(clase);
+      });
+    });
   });
 </script>
-<span>hola</span>
+<button id="socket" onclick="enviarSockete()">
+  PROBAR SOCKETE
+</button>

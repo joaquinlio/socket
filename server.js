@@ -1,19 +1,32 @@
-var app = require("express")();
-var http = require("http").createServer(app);
-var io = require("socket.io")(http, {
-  pingTimeout: 3600000, // intervalo de una hora haga que la conexion del socket se cierre
-  pingInterval: 3600000
-});
 var fs = require("fs");
 
+/* var options = {
+  key: fs.readFileSync("server-key.pem"),
+  cert: fs.readFileSync("server-cert.pem")
+}; */
+
+var app = require("express")();
+var https = require("http").createServer();
+var io = require("socket.io")(https);
+
+io.on("connection", socket => {
+  //console.log(socket);
+  socket.broadcast.emit("clase", {
+    probando: "conectado"
+  });
+  socket.on("clase", clase => {
+    socket.broadcast.emit("clase", {
+      clase
+    });
+  });
+});
+/* socket.on("reconnect_attempt", () => {
+  socket.io.opts.transports = ["polling", "websocket"];
+}); */
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-io.on("connection", function(socket) {
-  fs.appendFileSync("log.txt", "Conexión de usuario.\n");
-});
-
-http.listen(3000, function() {
+https.listen(3000, function() {
   console.log("listening on *:3000");
 });
