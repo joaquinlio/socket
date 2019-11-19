@@ -1,13 +1,13 @@
 var fs = require("fs");
 
-var options = {
+/* var options = {
   key: fs.readFileSync("server-key.pem"),
   cert: fs.readFileSync("server-cert.pem"),
   ca: fs.readFileSync("../intermediate.crt")
-};
+}; */
 
 var app = require("express")();
-var https = require("https").createServer(options);
+var https = require("http").createServer();
 var io = require("socket.io")(https, {
   pingTimeout: 3600000,
   pingInterval: 3600000,
