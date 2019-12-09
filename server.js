@@ -7,19 +7,19 @@ var fs = require("fs");
 }; */
 
 var app = require("express")();
-var https = require("http").createServer();
+var https = require("http").createServer(app);
 var io = require("socket.io")(https, {
-  pingTimeout: 3600000,
-  pingInterval: 3600000,
-  upgradeTimeout: 3600000
+  pingTimeout: 36000,
+  pingInterval: 36000,
+  upgradeTimeout: 36000
 });
 
 io.on("connection", socket => {
-  console.log(socket);
   socket.broadcast.emit("clase", {
     probando: "conectado"
   });
   socket.on("clase", clase => {
+    console.log(clase);
     socket.broadcast.emit("clase", {
       clase
     });

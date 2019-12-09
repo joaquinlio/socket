@@ -6,19 +6,21 @@
 ></script>
 
 <script>
-  var socket = io.connect("/", {
-    transports: ["websocket"]
-    //rejectUnauthorized: false
-  });
+  var socket = io.connect(
+    "http://socket-env.jjixpbvugb.us-east-1.elasticbeanstalk.com",
+    {
+      transports: ["websocket"],
+      rejectUnauthorized: false
+    }
+  );
   function enviarSockete() {
     var clase = { probando: "socketes" };
 
     socket.emit("clase", clase);
   }
   $(document).ready(function() {
-    //console.log(socket);
     socket.on("connect", () => {
-      //console.log("conectado");
+      console.log("conectado");
       socket.on("clase", clase => {
         console.log(clase);
       });
