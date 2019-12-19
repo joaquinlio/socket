@@ -1,4 +1,5 @@
 var fs = require("fs");
+const port = parseInt(process.env.PORT, 10) || 3000;
 
 /* var options = {
   key: fs.readFileSync("server-key.pem"),
@@ -32,6 +33,6 @@ app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-https.listen(3000, function() {
+https.listen(port, function() {
   console.log("listening on *:3000");
 });
