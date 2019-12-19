@@ -12,9 +12,9 @@
     "react-scripts": "^3.3.0"
   },
   "scripts": {
-    "test": "node server.js",
-    "start": "node server.js",
-    "deploy": "node server.js"
+    "test": "node app.js",
+    "start": "node app.js",
+    "deploy": "node app.js"
   },
   "author": "Federico Callero",
   "license": "ISC"
