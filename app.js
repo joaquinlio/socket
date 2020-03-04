@@ -33,6 +33,6 @@ app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-https.listen(2053, function() {
+https.listen(port, function() {
   console.log("listening on *:" + port);
 });
