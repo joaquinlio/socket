@@ -6,14 +6,10 @@
 ></script>
 
 <script>
-  var socket = io.connect(
-    "http://socket-env.5zvnsigipw.us-east-2.elasticbeanstalk.com:8081",
-    //"/",
-    {
-      transports: ["websocket"],
-      rejectUnauthorized: false
-    }
-  );
+  var socket = io.connect("https://socket.axontraining.com", {
+    transports: ["websocket"],
+    rejectUnauthorized: false
+  });
   function enviarSockete() {
     var clase = { probando: "socketes" };
 
